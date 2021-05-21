@@ -113,7 +113,7 @@ export const WorkbookLoader = () => {
         </div>
       </>}
       {configSelector.previewSheet && <div className="row align-block align-block">
-        <div className="col s5 align-block__wrapper align-block__wrapper_justified-center">
+        <div className="col s12 m5 align-block__wrapper align-block__wrapper_justified-start">
           <div>
             <p>
               <label htmlFor="headingsRadio0">
@@ -145,14 +145,14 @@ export const WorkbookLoader = () => {
           </div>
 
         </div>
-        <div className="col s5 align-block__wrapper align-block__wrapper_justified-start">
+        <div className="col s8 m5 align-block__wrapper align-block__wrapper_justified-start">
           <button
             className="btn"
             onClick={() => generateJsonHandler()}
             disabled={!configSelector.selectableSheet}
           ><i className="material-icons left">account_tree</i>Generate</button>
         </div>
-        <div className="col s2 align-block__wrapper align-block__wrapper_justified-end">
+        <div className="col s4 m2 align-block__wrapper align-block__wrapper_justified-end">
           <button
             className="btn-floating waves-effect waves-light teal lighten-2"
             onClick={() => storeHandler()}
@@ -165,20 +165,20 @@ export const WorkbookLoader = () => {
         <div className="col s12">
           <h4>3. Save result as file or upload to url</h4>
         </div>
-        <div className="col s6 m4 l3 align-block__wrapper align-block__wrapper_justified-start">
+        <div className="col s7 m4 l3 align-block__wrapper align-block__wrapper_justified-start">
           <button
             className="btn light-blue full-width"
             onClick={() => downloadJSONHandler(sheetSelector, 'json.txt', 'text/plain')}
           ><i className="material-icons left">file_download</i>Download file</button>
         </div>
-        <div className="col s6 m8 hide-on-large-only"></div>
-        <div className="col s6 m4 l3 align-block__wrapper align-block__wrapper_justified-start">
+        <div className="col s5 m8 hide-on-large-only"></div>
+        <div className="col s7 m4 l3 align-block__wrapper align-block__wrapper_justified-start">
           <button
             className="btn light-blue full-width"
             onClick={() => uploadJSONHandler()}
           ><i className="material-icons left">file_upload</i>Upload to</button>
         </div>
-        <div className="input-field col s6 m8 l6">
+        <div className="input-field col s5 m8 l6">
           <input
             id="url"
             type="text"
