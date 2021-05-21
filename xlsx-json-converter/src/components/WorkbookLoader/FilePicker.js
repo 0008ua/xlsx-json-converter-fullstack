@@ -29,7 +29,7 @@ export const FilePicker = () => {
           <div className="file-field input-field">
             <div className="btn">
               <span><i className="material-icons left">folder</i>File</span>
-              <input type="file" onChange={fileHandler} />
+              <input type="file" accept=".xlsx" onChange={fileHandler} />
             </div>
             <div className="file-path-wrapper">
               <input className="file-path validate" type="text" />

@@ -46,7 +46,7 @@ router.post('/upload', (req, res, next) => {
 
 router.post('/test', (req, res, next) => {
   const body = req.body;
-  // console.log('body', body);
+  console.log('body', body);
   setTimeout(() => res.status(200).json(body), 2000);
   // return res.status(200).json(body);
   // return next(new ClientError());

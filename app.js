@@ -10,7 +10,7 @@ app.use(cors(
   {
     allowedHeaders: ['Content-Type'],
     // methods: 'POST',
-    origin: ['http://localhost:3000'],
+    origin: ['http://localhost:3000', 'https://xlsx-json-converter.herokuapp.com'],
     optionsSuccessStatus: 200,
   },
 ));
