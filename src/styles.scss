@@ -1,0 +1,78 @@
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+// Small screens are defined as having a max-width of 600px
+// Medium screens are defined as having a max-width of 992px
+// Large screen are defined as having a min-width of 993px
+// Extra Large screen are defined as having a min-width of 1200px
+@import "materialize-css/sass/materialize.scss";
+
+$danger: #ffcdd2;
+$success: #e0f2f1;
+
+td,
+th {
+  text-align: center;
+}
+
+.align-block {
+  display: flex;
+  flex-flow: row wrap;
+  &__wrapper {
+    display: flex;
+    align-items: center;
+    &_justified-start {
+      justify-content: flex-start;
+    }
+    &_justified-center {
+      justify-content: center;
+    }
+    &_justified-end {
+      justify-content: flex-end;
+    }
+  }
+}
+
+.full-width {
+  width: 100%;
+}
+
+.message {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  border-radius: 5px;
+  opacity: 0.9;
+  z-index: 998;
+  &__wrapper {
+    position: relative;
+    padding: 15px;
+    height: 64px;
+    &_danger {
+      background-color: $danger;
+    }
+    &_success {
+      background-color: $success;
+    }
+  }
+  &__text {
+    font-size: 1.5rem;
+    margin: 0 auto;
+    width: 90%;
+  }
+}
+
+.loading {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  margin-left: -18px;
+  margin-top: -18px;
+  width: 36px;
+  height: 36px;
+}
+
+@media #{$small-and-down} {
+  nav .brand-logo {
+    font-size: 1.5rem;
+  }
+}
