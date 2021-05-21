@@ -1,0 +1,6 @@
+{
+  "root": "xlsx-json-converter/build/",
+  "routes": {
+    "xlsx-json-converter/**": "index.html"
+  }
+}
