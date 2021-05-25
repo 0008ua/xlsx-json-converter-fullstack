@@ -15,7 +15,6 @@ export const WorkbookLoader = () => {
   const workbookSelector = useSelector((state) => state.data.workbook);
   const sheetSelector = useSelector((state) => state.data.sheet);
 
-
   const generatePreview = useCallback((range) => {
     const rowsCount = range.e.r - range.s.r + 1;
     const rowsToDisplay = 5;
@@ -78,7 +77,7 @@ export const WorkbookLoader = () => {
 
   const uploadJSONHandler = () => {
     if (!urlValue) {
-      dispatch(setMessageAction({text: 'Please insert url', style: 'danger'}))
+      dispatch(setMessageAction({ text: 'Please insert url', style: 'danger' }))
       return;
     }
     dispatch(uploadJSON({
