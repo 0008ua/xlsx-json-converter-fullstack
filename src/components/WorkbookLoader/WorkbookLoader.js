@@ -67,7 +67,8 @@ export const WorkbookLoader = () => {
     if (configSelector.headerA) {
       opts.header = 'A';
     }
-    const sheet = XLSX.utils.sheet_to_json(workbookSelector.Sheets[workbookSelector.SheetNames[0]], opts);
+    const sheet = XLSX.utils.sheet_to_csv(workbookSelector.Sheets[workbookSelector.SheetNames[0]], opts);
+    // const sheet = XLSX.utils.sheet_to_json(workbookSelector.Sheets[workbookSelector.SheetNames[0]], opts);
     dispatch(setSheetAction(sheet));
     generatePreview(configSelector.range);
     dispatch(setConfigAction({ selectableSheet: false }));
@@ -168,7 +169,7 @@ export const WorkbookLoader = () => {
           <button
             className="btn light-blue full-width"
             onClick={() => downloadJSONHandler(sheetSelector, 'json.txt', 'text/plain')}
-          ><i className="material-icons left">file_download</i>Download file</button>
+          ><i className="material-icons left">file_download</i>Download file .csv</button>
         </div>
         <div className="col s5 m8 hide-on-large-only"></div>
         <div className="col s7 m4 l3 align-block__wrapper align-block__wrapper_justified-start">
