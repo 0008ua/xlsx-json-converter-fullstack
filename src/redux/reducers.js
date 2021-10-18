@@ -17,6 +17,7 @@ const initialState = {
       range: null,
       selectableSheet: true,
       headerA: false,
+      filetype: 'json',
     },
   },
   server: {

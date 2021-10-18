@@ -60,21 +60,41 @@ export const WorkbookLoader = () => {
 
   const generateJsonHandler = useCallback(() => {
     dispatch(setLoading(true));
-    const opts = {
+    console.log('configSelector.range', configSelector.range)
+    let opts = {
       range: configSelector.range,
       defval: '',
+    };
+    switch (configSelector.filetype) {
+      case 'json':
+        if (configSelector.headerA) {
+          opts.header = 'A';
+        }
+        break;
+
+      case 'csv':
+        opts.blankrows = false;
+        break;
+
+      default:
+      // opts = {};
+
     }
-    if (configSelector.headerA) {
-      opts.header = 'A';
-    }
-    const sheet = XLSX.utils.sheet_to_csv(workbookSelector.Sheets[workbookSelector.SheetNames[0]], opts);
+    // const opts = {
+    //   range: configSelector.range,
+    //   defval: '',
+    // }
+    // if (configSelector.headerA) {
+    //   opts.header = 'A';
+    // }
+    const sheet = XLSX.utils['sheet_to_' + configSelector.filetype](workbookSelector.Sheets[workbookSelector.SheetNames[0]], opts);
     // const sheet = XLSX.utils.sheet_to_json(workbookSelector.Sheets[workbookSelector.SheetNames[0]], opts);
     dispatch(setSheetAction(sheet));
     generatePreview(configSelector.range);
     dispatch(setConfigAction({ selectableSheet: false }));
     dispatch(setLoading(false));
 
-  }, [dispatch, configSelector.range, configSelector.headerA, workbookSelector, generatePreview])
+  }, [dispatch, configSelector.range, configSelector.headerA, configSelector.filetype, workbookSelector, generatePreview])
 
   const uploadJSONHandler = () => {
     if (!urlValue) {
@@ -102,6 +122,10 @@ export const WorkbookLoader = () => {
     dispatch(setConfigAction({ headerA: event.target.value === 'true' }));
   }
 
+  const filetypeRadioHandler = (event) => {
+    dispatch(setConfigAction({ filetype: event.target.value }));
+  }
+
   return (
     <>
       <div className="row">
@@ -113,7 +137,7 @@ export const WorkbookLoader = () => {
         </div>
       </>}
       {configSelector.previewSheet && <div className="row align-block align-block">
-        <div className="col s12 m5 align-block__wrapper align-block__wrapper_justified-start">
+        <div className="col s6 l4 align-block__wrapper align-block__wrapper_justified-start">
           <div>
             <p>
               <label htmlFor="headingsRadio0">
@@ -143,16 +167,53 @@ export const WorkbookLoader = () => {
               </label>
             </p>
           </div>
-
         </div>
-        <div className="col s8 m5 align-block__wrapper align-block__wrapper_justified-start">
+        <div className="col s6 l3 align-block__wrapper align-block__wrapper_justified-start">
+          <div>
+            <p>
+              <label htmlFor="filetypeRadio0">
+                <input
+                  id="filetypeRadio0"
+                  type="radio"
+                  name="filetypeRadio"
+                  checked={configSelector.filetype === 'json'}
+                  value={'json'}
+                  onChange={filetypeRadioHandler}
+                  disabled={!configSelector.selectableSheet}
+                />
+                <span>JSON</span>
+              </label>
+            </p>
+            <p>
+              <label htmlFor="filetypeRadio1">
+                <input
+                  id="filetypeRadio1"
+                  type="radio" name="filetypeRadio"
+                  checked={configSelector.filetype === 'csv'}
+                  value={'csv'}
+                  onChange={filetypeRadioHandler}
+                  disabled={!configSelector.selectableSheet}
+                />
+                <span>CSV</span>
+              </label>
+            </p>
+          </div>
+        </div>
+        <div className="col s8 l3 align-block__wrapper align-block__wrapper_justified-center">
           <button
             className="btn"
             onClick={() => generateJsonHandler()}
             disabled={!configSelector.selectableSheet}
-          ><i className="material-icons left">account_tree</i>Generate</button>
+          ><i className="material-icons left">account_tree</i>Generate {configSelector.filetype}</button>
         </div>
-        <div className="col s4 m2 align-block__wrapper align-block__wrapper_justified-end">
+        {/* <div className="col s8 m3 align-block__wrapper align-block__wrapper_justified-start">
+          <button
+            className="btn"
+            onClick={() => generateJsonHandler()}
+            disabled={!configSelector.selectableSheet}
+          >Generate</button>
+        </div> */}
+        <div className="col s4 l2 align-block__wrapper align-block__wrapper_justified-center">
           <button
             className="btn-floating waves-effect waves-light teal lighten-2"
             onClick={() => storeHandler()}
@@ -168,8 +229,8 @@ export const WorkbookLoader = () => {
         <div className="col s7 m4 l3 align-block__wrapper align-block__wrapper_justified-start">
           <button
             className="btn light-blue full-width"
-            onClick={() => downloadJSONHandler(sheetSelector, 'json.txt', 'text/plain')}
-          ><i className="material-icons left">file_download</i>Download file .csv</button>
+            onClick={() => downloadJSONHandler(sheetSelector, 'result.' + configSelector.filetype, 'text/plain')}
+          ><i className="material-icons left">file_download</i>Download {configSelector.filetype}</button>
         </div>
         <div className="col s5 m8 hide-on-large-only"></div>
         <div className="col s7 m4 l3 align-block__wrapper align-block__wrapper_justified-start">
