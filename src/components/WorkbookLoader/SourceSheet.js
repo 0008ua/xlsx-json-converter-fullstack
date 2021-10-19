@@ -33,12 +33,12 @@ export const SourceSheet = () => {
     window.M.FormSelect.init(elem, []);
   }, [headingRow, dispatch, configSelector.initialRange, configSelector.selectableSheet]);
 
-  const shrinkWideTable = (colQty) => {
-    if (colQty > 5) {
+  const shrinkPreviewTableWide = useMemo(() => {
+    if (configSelector.initialRange.e.c > 5) {
       return 5;
     }
-    return colQty;
-  }
+    return configSelector.initialRange.e.c;
+  }, [configSelector.initialRange.e.c]);
 
   return (
     <>
@@ -69,7 +69,7 @@ export const SourceSheet = () => {
               <tr>
                 <th scope="col" className="grey lighten-2"></th>
                 {alphabet
-                  .slice(0, shrinkWideTable(configSelector.initialRange.e.c) + 1)
+                  .slice(0, shrinkPreviewTableWide + 1)
                   .map((el, idx) => {
                     return <th scope="col" key={idx} className="grey lighten-2">{el}</th>
                   })}
@@ -86,8 +86,8 @@ export const SourceSheet = () => {
                       className={((rowIndex) === headingRow ? 'lighten-1 ' : 'lighten-2 ') + 'grey'}
                     >{rowIndex + 1}
                     </th>
-                    {row.filter((_, colIndex) => colIndex <= shrinkWideTable(row.length)).map((col, colIndex) => {
-                      if (colIndex === shrinkWideTable(row.length)) {
+                    {row.filter((_, colIndex) => colIndex <= shrinkPreviewTableWide).map((col, colIndex) => {
+                      if (colIndex === shrinkPreviewTableWide) {
                         return (
                           <td className={(headingRow === rowIndex ? 'teal lighten-5' : '') + ' text-center'} key={colIndex}>...</td>
                         );
@@ -106,7 +106,7 @@ export const SourceSheet = () => {
                   scope="row"
                   className="grey lighten-2"
                 >{previewSheet.length + 1}</th>
-                {Array(shrinkWideTable(configSelector.initialRange.e.c + 1)).fill('').map((col, colIndex) => {
+                {Array(shrinkPreviewTableWide).fill('').map((col, colIndex) => {
                   return (
                     <td className="" key={colIndex}>...</td>
                   );
