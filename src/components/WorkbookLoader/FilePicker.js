@@ -5,7 +5,7 @@ import { setWorkbookAction, setConfigAction } from '../../redux/actions';
 import { setLoading } from './../../redux/actions';
 
 export const FilePicker = () => {
-  const defaultCodepageValue = 1251;
+  const defaultCodepageValue = 'UTF-8';
   const [codepageValue, setCodepageValue] = useState(defaultCodepageValue);
 
   const dispatch = useDispatch();

@@ -33,7 +33,8 @@ export const WorkbookLoader = () => {
     const previewSheet = XLSX.utils.sheet_to_json(workbookSelector.Sheets[workbookSelector.SheetNames[configSelector.activeSheet]], {
       range,
       header: 1,
-      defval: ''
+      defval: '',
+      blankrows: false,
     });
     dispatch(setConfigAction({ previewSheet }));
   }, [dispatch, workbookSelector, configSelector.activeSheet]);
@@ -42,12 +43,16 @@ export const WorkbookLoader = () => {
     dispatch(setSheetAction(null))
     if (workbookSelector) {
       let initialRange;
-      if (workbookSelector.Sheets[workbookSelector.SheetNames[(configSelector.activeSheet)]]['!ref']) {
-        initialRange = XLSX.utils.decode_range(
-          workbookSelector.Sheets[workbookSelector.SheetNames[(configSelector.activeSheet)]]['!ref']);
+      const wb = workbookSelector.Sheets[workbookSelector.SheetNames[(configSelector.activeSheet)]];
+      if (wb['!ref']) {
+        // set start of workbook (!ref) to top row
+        wb['!ref'] = XLSX.utils.encode_range({ s: { c: 0, r: 0 }, e: XLSX.utils.decode_range(wb['!ref']).e });
+
+        initialRange = XLSX.utils.decode_range(wb['!ref']);
       } else {
         initialRange = { s: { c: 0, r: 0 }, e: { c: 3, r: 0 } };
       }
+      console.log('initialRange', initialRange)
       dispatch(setConfigAction({ initialRange }));
       dispatch(setConfigAction({ selectableSheet: true }));
       generatePreview(initialRange);
@@ -60,20 +65,18 @@ export const WorkbookLoader = () => {
 
   const generateJsonHandler = useCallback(() => {
     dispatch(setLoading(true));
-    console.log('configSelector.range', configSelector.range)
     let opts = {
-      range: configSelector.range,
-      defval: '',
+      blankrows: false,
     };
     switch (configSelector.filetype) {
       case 'json':
+        opts.defval = '';
         if (configSelector.headerA) {
           opts.header = 'A';
         }
         break;
 
       case 'csv':
-        opts.blankrows = false;
         break;
 
       default:
@@ -87,8 +90,17 @@ export const WorkbookLoader = () => {
     // if (configSelector.headerA) {
     //   opts.header = 'A';
     // }
-    const sheet = XLSX.utils['sheet_to_' + configSelector.filetype](workbookSelector.Sheets[workbookSelector.SheetNames[0]], opts);
-    // const sheet = XLSX.utils.sheet_to_json(workbookSelector.Sheets[workbookSelector.SheetNames[0]], opts);
+    console.log('decode', configSelector.range);
+    console.log('encode', XLSX.utils.encode_range(configSelector.range));
+    const sht = workbookSelector.Sheets[workbookSelector.SheetNames[0]];
+    sht['!ref'] = XLSX.utils.encode_range(configSelector.range);
+    console.log('sht', sht);
+    const sheet = XLSX.utils['sheet_to_' + configSelector.filetype](sht, opts);
+    // const sheet = XLSX.utils['sheet_to_' + configSelector.filetype](workbookSelector.Sheets[workbookSelector.SheetNames[0]], opts);
+
+    // const sheet = XLSX.utils.sheet_to_json(
+    //   XLSX.utils.decode_range(workbookSelector.Sheets[workbookSelector.SheetNames[0]][, opts)
+    //   );
     dispatch(setSheetAction(sheet));
     generatePreview(configSelector.range);
     dispatch(setConfigAction({ selectableSheet: false }));
@@ -148,7 +160,7 @@ export const WorkbookLoader = () => {
                   checked={!configSelector.headerA}
                   value={'false'}
                   onChange={headingsRadioHandler}
-                  disabled={!configSelector.selectableSheet}
+                  disabled={!configSelector.selectableSheet || configSelector.filetype === 'csv'}
                 />
                 <span>Headings as keys</span>
               </label>
@@ -161,7 +173,7 @@ export const WorkbookLoader = () => {
                   checked={configSelector.headerA}
                   value={'true'}
                   onChange={headingsRadioHandler}
-                  disabled={!configSelector.selectableSheet}
+                  disabled={!configSelector.selectableSheet || configSelector.filetype === 'csv'}
                 />
                 <span>A B C.. as keys</span>
               </label>
@@ -250,7 +262,7 @@ export const WorkbookLoader = () => {
         </div>
         <div className="col l9 offset-l3 ">
           <p>
-            Make POST request with header 'Content-Type': 'application/json' and generated JSON in body
+            It Makes POST request with header 'Content-Type': 'application/json' and generated JSON in body
           </p>
           <ul className="grey-text darken-2">
             <li><strong>Don't forget to add CORS rules on your server</strong></li>

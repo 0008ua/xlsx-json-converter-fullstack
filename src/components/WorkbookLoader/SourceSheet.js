@@ -31,7 +31,14 @@ export const SourceSheet = () => {
     }
     const elem = document.getElementById('sheetSelector');
     window.M.FormSelect.init(elem, []);
-  }, [headingRow, dispatch, configSelector.initialRange, configSelector.selectableSheet])
+  }, [headingRow, dispatch, configSelector.initialRange, configSelector.selectableSheet]);
+
+  const shrinkWideTable = (colQty) => {
+    if (colQty > 5) {
+      return 5;
+    }
+    return colQty;
+  }
 
   return (
     <>
@@ -62,7 +69,7 @@ export const SourceSheet = () => {
               <tr>
                 <th scope="col" className="grey lighten-2"></th>
                 {alphabet
-                  .slice(0, configSelector.initialRange.e.c + 1)
+                  .slice(0, shrinkWideTable(configSelector.initialRange.e.c) + 1)
                   .map((el, idx) => {
                     return <th scope="col" key={idx} className="grey lighten-2">{el}</th>
                   })}
@@ -79,10 +86,17 @@ export const SourceSheet = () => {
                       className={((rowIndex) === headingRow ? 'lighten-1 ' : 'lighten-2 ') + 'grey'}
                     >{rowIndex + 1}
                     </th>
-                    {row.map((col, colIndex) => {
-                      return (
-                        <td className={(headingRow === rowIndex ? 'teal lighten-5' : '') + ' text-center'} key={colIndex}>{col} </td>
-                      );
+                    {row.filter((_, colIndex) => colIndex <= shrinkWideTable(row.length)).map((col, colIndex) => {
+                      if (colIndex === shrinkWideTable(row.length)) {
+                        return (
+                          <td className={(headingRow === rowIndex ? 'teal lighten-5' : '') + ' text-center'} key={colIndex}>...</td>
+                        );
+                      } else {
+                        return (
+                          <td className={(headingRow === rowIndex ? 'teal lighten-5' : '') + ' text-center'} key={colIndex}>{col} </td>
+                        );
+                      }
+
                     })}
                   </tr>
                 );
@@ -92,7 +106,7 @@ export const SourceSheet = () => {
                   scope="row"
                   className="grey lighten-2"
                 >{previewSheet.length + 1}</th>
-                {Array(configSelector.initialRange.e.c + 1).fill('').map((col, colIndex) => {
+                {Array(shrinkWideTable(configSelector.initialRange.e.c + 1)).fill('').map((col, colIndex) => {
                   return (
                     <td className="" key={colIndex}>...</td>
                   );
