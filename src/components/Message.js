@@ -9,6 +9,7 @@ export const Message = () => {
   const dispatch = useDispatch();
 
   const errorSelector = useSelector((state) => state.app.error);
+  
   const messageSelector = useSelector((state) => state.app.message);
 
   // listening on error action
